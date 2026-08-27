@@ -178,13 +178,6 @@ Frontend runs on `http://localhost:5173`.
 
 ---
 
-## A Few Notes
-
-- Conflict detection currently checks for an exact match on instructor, date, and start time. It doesn't yet detect partial time overlaps (e.g. a 10:00–11:00 lecture clashing with a 10:30–11:30 one) — that would be a natural next improvement.
-- Passwords are hashed with bcrypt before being stored, and routes are protected using JWT middleware with role checks (`isAdmin`, `isInstructor`).
-- The UI is built from scratch with custom CSS rather than a component library, to keep the bundle light and the design consistent across pages.
-
----
 
 ## Author
 
