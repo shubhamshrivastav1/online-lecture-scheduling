@@ -52,7 +52,7 @@ function AdminDashboard() {
       setLoadingCourses(true);
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:8000/api/courses", {
+      const response = await axios.get("https://online-lecture-scheduling-backend-kgcl.onrender.com/api/courses", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -71,7 +71,7 @@ function AdminDashboard() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:8000/api/auth/instructors",
+        "https://online-lecture-scheduling-backend-kgcl.onrender.com/api/auth/instructors",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -89,7 +89,7 @@ function AdminDashboard() {
       setLoadingLectures(true);
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:8000/api/lectures", {
+      const response = await axios.get("https://online-lecture-scheduling-backend-kgcl.onrender.com/api/lectures", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -135,7 +135,7 @@ function AdminDashboard() {
 
       if (editingCourseId) {
         await axios.put(
-          `http://localhost:8000/api/courses/${editingCourseId}`,
+          `https://online-lecture-scheduling-backend-kgcl.onrender.com/api/courses/${editingCourseId}`,
           courseForm,
           {
             headers: {
@@ -146,7 +146,7 @@ function AdminDashboard() {
         );
         alert("Course updated successfully");
       } else {
-        await axios.post("http://localhost:8000/api/courses", courseForm, {
+        await axios.post("https://online-lecture-scheduling-backend-kgcl.onrender.com/api/courses", courseForm, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -173,7 +173,7 @@ function AdminDashboard() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8000/api/courses/${courseId}`, {
+      await axios.delete(`https://online-lecture-scheduling-backend-kgcl.onrender.com/api/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Course deleted successfully");
@@ -240,7 +240,7 @@ function AdminDashboard() {
 
       if (editingLectureId) {
         await axios.put(
-          `http://localhost:8000/api/lectures/${editingLectureId}`,
+          `https://online-lecture-scheduling-backend-kgcl.onrender.com/api/lectures/${editingLectureId}`,
           lectureForm,
           {
             headers: {
@@ -251,7 +251,7 @@ function AdminDashboard() {
         );
         alert("Lecture updated successfully");
       } else {
-        await axios.post("http://localhost:8000/api/lectures", lectureForm, {
+        await axios.post("https://online-lecture-scheduling-backend-kgcl.onrender.com/api/lectures", lectureForm, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -278,7 +278,7 @@ function AdminDashboard() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8000/api/lectures/${lectureId}`, {
+      await axios.delete(`https://online-lecture-scheduling-backend-kgcl.onrender.com/api/lectures/${lectureId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Lecture deleted successfully");

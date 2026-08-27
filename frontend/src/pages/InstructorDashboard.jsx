@@ -20,7 +20,7 @@ function InstructorDashboard() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:8000/api/lectures/my-lectures",
+        "https://online-lecture-scheduling-backend-kgcl.onrender.com/api/lectures/my-lectures",
         {
           headers: {
             Authorization: `Bearer ${token}`,
