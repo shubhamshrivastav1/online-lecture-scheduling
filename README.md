@@ -28,6 +28,18 @@ Password: 123456
 Email: rahul@gmail.com
 Password: 123456
 ```
+```
+Email: simran@gmail.com
+Password: simran123
+```
+```
+Email: ajay@gmail.com
+Password: ajay123
+```
+```
+Email: priya@gmail.com
+Password: priya123
+```
 
 ---
 
