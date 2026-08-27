@@ -1,3 +1,252 @@
+// // import Lecture from "../models/lecture.model.js";
+// // import { Course } from "../models/course.model.js";
+// // import { User } from "../models/user.model.js";
+
+// // export const createLecture = async (req, res) => {
+// //   try {
+// //     const {
+// //       course,
+// //       instructor,
+// //       date,
+// //       title,
+// //       description,
+// //     } = req.body;
+
+// //     // 1. Check required fields
+// //     if (!course || !instructor || !date || !title) {
+// //       return res.status(400).json({
+// //         success: false,
+// //         message: "Course, instructor, date and title are required",
+// //       });
+// //     }
+
+// //     // 2. Check course exists
+// //     const existingCourse = await Course.findById(course);
+
+// //     if (!existingCourse) {
+// //       return res.status(404).json({
+// //         success: false,
+// //         message: "Course not found",
+// //       });
+// //     }
+
+// //     // 3. Check instructor exists
+// //     const existingInstructor = await User.findOne({
+// //       _id: instructor,
+// //       role: "instructor",
+// //     });
+
+// //     if (!existingInstructor) {
+// //       return res.status(404).json({
+// //         success: false,
+// //         message: "Instructor not found",
+// //       });
+// //     }
+
+// //     // 4. Check instructor conflict
+// //     const existingLecture = await Lecture.findOne({
+// //       instructor,
+// //       date: new Date(date),
+// //     });
+
+// //     if (existingLecture) {
+// //       return res.status(409).json({
+// //         success: false,
+// //         message:
+// //           "This instructor already has a lecture assigned on this date",
+// //       });
+// //     }
+
+// //     // 5. Create lecture
+// //     const lecture = await Lecture.create({
+// //       course,
+// //       instructor,
+// //       date: new Date(date),
+// //       title,
+// //       description: description || "",
+// //     });
+
+// //     // 6. Return created lecture
+// //     return res.status(201).json({
+// //       success: true,
+// //       message: "Lecture created successfully",
+// //       lecture,
+// //     });
+// //   } catch (error) {
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: "Failed to create lecture",
+// //       error: error.message,
+// //     });
+// //   }
+// // };
+
+// // export const getMyLectures = async (req, res) => {
+// //   try {
+// //     const instructorId = req.user.userId;
+
+// //     const lectures = await Lecture.find({
+// //       instructor: instructorId,
+// //     })
+// //       .populate("course", "name level")
+// //       .populate("instructor", "name email")
+// //       .sort({ date: 1 });
+
+// //     return res.status(200).json({
+// //       success: true,
+// //       message: "Your lectures fetched successfully",
+// //       lectures,
+// //     });
+// //   } catch (error) {
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: "Failed to fetch your lectures",
+// //       error: error.message,
+// //     });
+// //   }
+// // };
+
+// // export const getAllLectures = async (req, res) => {
+// //   try {
+// //     const lectures = await Lecture.find()
+// //       .populate("course", "name level")
+// //       .populate("instructor", "name email")
+// //       .sort({ date: 1 });
+
+// //     return res.status(200).json({
+// //       success: true,
+// //       message: "All lectures fetched successfully",
+// //       lectures,
+// //     });
+// //   } catch (error) {
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: "Failed to fetch lectures",
+// //       error: error.message,
+// //     });
+// //   }
+// // };
+
+// // export const updateLecture = async (req, res) => {
+// //   try {
+// //     const { id } = req.params;
+// //     const {
+// //       course,
+// //       instructor,
+// //       date,
+// //       title,
+// //       description,
+// //     } = req.body;
+
+// //     const lecture = await Lecture.findById(id);
+
+// //     if (!lecture) {
+// //       return res.status(404).json({
+// //         success: false,
+// //         message: "Lecture not found",
+// //       });
+// //     }
+
+// //     // If instructor/date is changing,
+// //     // check for another lecture with same instructor/date
+// //     if (instructor || date) {
+// //       const newInstructor = instructor || lecture.instructor;
+// //       const newDate = date ? new Date(date) : lecture.date;
+
+// //       const conflictingLecture = await Lecture.findOne({
+// //         _id: { $ne: id },
+// //         instructor: newInstructor,
+// //         date: newDate,
+// //       });
+
+// //       if (conflictingLecture) {
+// //         return res.status(409).json({
+// //           success: false,
+// //           message:
+// //             "This instructor already has a lecture assigned on this date",
+// //         });
+// //       }
+// //     }
+
+// //     if (course) {
+// //       const existingCourse = await Course.findById(course);
+
+// //       if (!existingCourse) {
+// //         return res.status(404).json({
+// //           success: false,
+// //           message: "Course not found",
+// //         });
+// //       }
+
+// //       lecture.course = course;
+// //     }
+
+// //     if (instructor) {
+// //       const existingInstructor = await User.findOne({
+// //         _id: instructor,
+// //         role: "instructor",
+// //       });
+
+// //       if (!existingInstructor) {
+// //         return res.status(404).json({
+// //           success: false,
+// //           message: "Instructor not found",
+// //         });
+// //       }
+
+// //       lecture.instructor = instructor;
+// //     }
+
+// //     if (date) lecture.date = new Date(date);
+// //     if (title) lecture.title = title;
+// //     if (description !== undefined) {
+// //       lecture.description = description;
+// //     }
+
+// //     await lecture.save();
+
+// //     return res.status(200).json({
+// //       success: true,
+// //       message: "Lecture updated successfully",
+// //       lecture,
+// //     });
+// //   } catch (error) {
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: "Failed to update lecture",
+// //       error: error.message,
+// //     });
+// //   }
+// // };
+
+// // export const deleteLecture = async (req, res) => {
+// //   try {
+// //     const { id } = req.params;
+
+// //     const lecture = await Lecture.findByIdAndDelete(id);
+
+// //     if (!lecture) {
+// //       return res.status(404).json({
+// //         success: false,
+// //         message: "Lecture not found",
+// //       });
+// //     }
+
+// //     return res.status(200).json({
+// //       success: true,
+// //       message: "Lecture deleted successfully",
+// //     });
+// //   } catch (error) {
+// //     return res.status(500).json({
+// //       success: false,
+// //       message: "Failed to delete lecture",
+// //       error: error.message,
+// //     });
+// //   }
+// // };
+
+
+
 // import Lecture from "../models/lecture.model.js";
 // import { Course } from "../models/course.model.js";
 // import { User } from "../models/user.model.js";
@@ -8,19 +257,21 @@
 //       course,
 //       instructor,
 //       date,
+//       startTime,
+//       endTime,
 //       title,
 //       description,
+//       room,
 //     } = req.body;
 
-//     // 1. Check required fields
-//     if (!course || !instructor || !date || !title) {
+//     if (!course || !instructor || !date || !startTime || !endTime || !title) {
 //       return res.status(400).json({
 //         success: false,
-//         message: "Course, instructor, date and title are required",
+//         message:
+//           "Course, instructor, date, start time, end time and title are required",
 //       });
 //     }
 
-//     // 2. Check course exists
 //     const existingCourse = await Course.findById(course);
 
 //     if (!existingCourse) {
@@ -30,7 +281,6 @@
 //       });
 //     }
 
-//     // 3. Check instructor exists
 //     const existingInstructor = await User.findOne({
 //       _id: instructor,
 //       role: "instructor",
@@ -43,30 +293,33 @@
 //       });
 //     }
 
-//     // 4. Check instructor conflict
+//     // Conflict check: same instructor, same date, same start time
 //     const existingLecture = await Lecture.findOne({
 //       instructor,
 //       date: new Date(date),
+//       startTime,
 //     });
 
 //     if (existingLecture) {
 //       return res.status(409).json({
 //         success: false,
 //         message:
-//           "This instructor already has a lecture assigned on this date",
+//           "This instructor already has a lecture at this date and time",
 //       });
 //     }
 
-//     // 5. Create lecture
 //     const lecture = await Lecture.create({
 //       course,
 //       instructor,
 //       date: new Date(date),
+//       startTime,
+//       endTime,
 //       title,
 //       description: description || "",
+//       room: room || "",
+//       createdBy: req.user.userId,
 //     });
 
-//     // 6. Return created lecture
 //     return res.status(201).json({
 //       success: true,
 //       message: "Lecture created successfully",
@@ -134,8 +387,11 @@
 //       course,
 //       instructor,
 //       date,
+//       startTime,
+//       endTime,
 //       title,
 //       description,
+//       room,
 //     } = req.body;
 
 //     const lecture = await Lecture.findById(id);
@@ -147,23 +403,23 @@
 //       });
 //     }
 
-//     // If instructor/date is changing,
-//     // check for another lecture with same instructor/date
-//     if (instructor || date) {
+//     if (instructor || date || startTime) {
 //       const newInstructor = instructor || lecture.instructor;
 //       const newDate = date ? new Date(date) : lecture.date;
+//       const newStartTime = startTime || lecture.startTime;
 
 //       const conflictingLecture = await Lecture.findOne({
 //         _id: { $ne: id },
 //         instructor: newInstructor,
 //         date: newDate,
+//         startTime: newStartTime,
 //       });
 
 //       if (conflictingLecture) {
 //         return res.status(409).json({
 //           success: false,
 //           message:
-//             "This instructor already has a lecture assigned on this date",
+//             "This instructor already has a lecture at this date and time",
 //         });
 //       }
 //     }
@@ -198,10 +454,11 @@
 //     }
 
 //     if (date) lecture.date = new Date(date);
+//     if (startTime) lecture.startTime = startTime;
+//     if (endTime) lecture.endTime = endTime;
 //     if (title) lecture.title = title;
-//     if (description !== undefined) {
-//       lecture.description = description;
-//     }
+//     if (description !== undefined) lecture.description = description;
+//     if (room !== undefined) lecture.room = room;
 
 //     await lecture.save();
 
@@ -245,12 +502,13 @@
 //   }
 // };
 
-
-
 import Lecture from "../models/lecture.model.js";
 import { Course } from "../models/course.model.js";
 import { User } from "../models/user.model.js";
 
+// ==============================
+// CREATE LECTURE
+// ==============================
 export const createLecture = async (req, res) => {
   try {
     const {
@@ -264,7 +522,15 @@ export const createLecture = async (req, res) => {
       room,
     } = req.body;
 
-    if (!course || !instructor || !date || !startTime || !endTime || !title) {
+    // 1. Check required fields
+    if (
+      !course ||
+      !instructor ||
+      !date ||
+      !startTime ||
+      !endTime ||
+      !title
+    ) {
       return res.status(400).json({
         success: false,
         message:
@@ -272,6 +538,15 @@ export const createLecture = async (req, res) => {
       });
     }
 
+    // 2. Check start time and end time
+    if (startTime >= endTime) {
+      return res.status(400).json({
+        success: false,
+        message: "End time must be after start time",
+      });
+    }
+
+    // 3. Check course exists
     const existingCourse = await Course.findById(course);
 
     if (!existingCourse) {
@@ -281,6 +556,7 @@ export const createLecture = async (req, res) => {
       });
     }
 
+    // 4. Check instructor exists
     const existingInstructor = await User.findOne({
       _id: instructor,
       role: "instructor",
@@ -293,20 +569,57 @@ export const createLecture = async (req, res) => {
       });
     }
 
-    // Conflict check: same instructor, same date, same start time
-    const existingLecture = await Lecture.findOne({
+    // ==========================================
+    // 5. CHECK INSTRUCTOR TIME CONFLICT
+    // ==========================================
+
+    const lecturesOnSameDay = await Lecture.find({
       instructor,
       date: new Date(date),
-      startTime,
     });
 
-    if (existingLecture) {
+    const hasInstructorConflict = lecturesOnSameDay.some((lecture) => {
+      return (
+        startTime < lecture.endTime &&
+        endTime > lecture.startTime
+      );
+    });
+
+    if (hasInstructorConflict) {
       return res.status(409).json({
         success: false,
-        message:
-          "This instructor already has a lecture at this date and time",
+        message: "Instructor already has a lecture at this time",
       });
     }
+
+    // ==========================================
+    // 6. CHECK ROOM TIME CONFLICT
+    // ==========================================
+
+    if (room) {
+      const lecturesInSameRoom = await Lecture.find({
+        room,
+        date: new Date(date),
+      });
+
+      const hasRoomConflict = lecturesInSameRoom.some((lecture) => {
+        return (
+          startTime < lecture.endTime &&
+          endTime > lecture.startTime
+        );
+      });
+
+      if (hasRoomConflict) {
+        return res.status(409).json({
+          success: false,
+          message: "This room is already booked at this time",
+        });
+      }
+    }
+
+    // ==========================================
+    // 7. CREATE LECTURE
+    // ==========================================
 
     const lecture = await Lecture.create({
       course,
@@ -320,6 +633,7 @@ export const createLecture = async (req, res) => {
       createdBy: req.user.userId,
     });
 
+    // 8. Return response
     return res.status(201).json({
       success: true,
       message: "Lecture created successfully",
@@ -334,6 +648,9 @@ export const createLecture = async (req, res) => {
   }
 };
 
+// ==============================
+// GET MY LECTURES
+// ==============================
 export const getMyLectures = async (req, res) => {
   try {
     const instructorId = req.user.userId;
@@ -343,7 +660,7 @@ export const getMyLectures = async (req, res) => {
     })
       .populate("course", "name level")
       .populate("instructor", "name email")
-      .sort({ date: 1 });
+      .sort({ date: 1, startTime: 1 });
 
     return res.status(200).json({
       success: true,
@@ -359,12 +676,15 @@ export const getMyLectures = async (req, res) => {
   }
 };
 
+// ==============================
+// GET ALL LECTURES
+// ==============================
 export const getAllLectures = async (req, res) => {
   try {
     const lectures = await Lecture.find()
       .populate("course", "name level")
       .populate("instructor", "name email")
-      .sort({ date: 1 });
+      .sort({ date: 1, startTime: 1 });
 
     return res.status(200).json({
       success: true,
@@ -380,9 +700,13 @@ export const getAllLectures = async (req, res) => {
   }
 };
 
+// ==============================
+// UPDATE LECTURE
+// ==============================
 export const updateLecture = async (req, res) => {
   try {
     const { id } = req.params;
+
     const {
       course,
       instructor,
@@ -394,6 +718,7 @@ export const updateLecture = async (req, res) => {
       room,
     } = req.body;
 
+    // 1. Find lecture
     const lecture = await Lecture.findById(id);
 
     if (!lecture) {
@@ -403,26 +728,74 @@ export const updateLecture = async (req, res) => {
       });
     }
 
-    if (instructor || date || startTime) {
-      const newInstructor = instructor || lecture.instructor;
-      const newDate = date ? new Date(date) : lecture.date;
-      const newStartTime = startTime || lecture.startTime;
+    // New values or existing values
+    const newInstructor = instructor || lecture.instructor;
+    const newDate = date ? new Date(date) : lecture.date;
+    const newStartTime = startTime || lecture.startTime;
+    const newEndTime = endTime || lecture.endTime;
+    const newRoom = room !== undefined ? room : lecture.room;
 
-      const conflictingLecture = await Lecture.findOne({
+    // 2. Validate time
+    if (newStartTime >= newEndTime) {
+      return res.status(400).json({
+        success: false,
+        message: "End time must be after start time",
+      });
+    }
+
+    // ==========================================
+    // 3. CHECK INSTRUCTOR CONFLICT
+    // ==========================================
+
+    const instructorLectures = await Lecture.find({
+      _id: { $ne: id },
+      instructor: newInstructor,
+      date: newDate,
+    });
+
+    const hasInstructorConflict = instructorLectures.some((existingLecture) => {
+      return (
+        newStartTime < existingLecture.endTime &&
+        newEndTime > existingLecture.startTime
+      );
+    });
+
+    if (hasInstructorConflict) {
+      return res.status(409).json({
+        success: false,
+        message: "Instructor already has a lecture at this time",
+      });
+    }
+
+    // ==========================================
+    // 4. CHECK ROOM CONFLICT
+    // ==========================================
+
+    if (newRoom) {
+      const roomLectures = await Lecture.find({
         _id: { $ne: id },
-        instructor: newInstructor,
+        room: newRoom,
         date: newDate,
-        startTime: newStartTime,
       });
 
-      if (conflictingLecture) {
+      const hasRoomConflict = roomLectures.some((existingLecture) => {
+        return (
+          newStartTime < existingLecture.endTime &&
+          newEndTime > existingLecture.startTime
+        );
+      });
+
+      if (hasRoomConflict) {
         return res.status(409).json({
           success: false,
-          message:
-            "This instructor already has a lecture at this date and time",
+          message: "This room is already booked at this time",
         });
       }
     }
+
+    // ==========================================
+    // 5. CHECK COURSE
+    // ==========================================
 
     if (course) {
       const existingCourse = await Course.findById(course);
@@ -436,6 +809,10 @@ export const updateLecture = async (req, res) => {
 
       lecture.course = course;
     }
+
+    // ==========================================
+    // 6. CHECK INSTRUCTOR
+    // ==========================================
 
     if (instructor) {
       const existingInstructor = await User.findOne({
@@ -453,13 +830,24 @@ export const updateLecture = async (req, res) => {
       lecture.instructor = instructor;
     }
 
-    if (date) lecture.date = new Date(date);
-    if (startTime) lecture.startTime = startTime;
-    if (endTime) lecture.endTime = endTime;
-    if (title) lecture.title = title;
-    if (description !== undefined) lecture.description = description;
-    if (room !== undefined) lecture.room = room;
+    // ==========================================
+    // 7. UPDATE FIELDS
+    // ==========================================
 
+    if (date) lecture.date = newDate;
+    if (startTime) lecture.startTime = newStartTime;
+    if (endTime) lecture.endTime = newEndTime;
+    if (title) lecture.title = title;
+
+    if (description !== undefined) {
+      lecture.description = description;
+    }
+
+    if (room !== undefined) {
+      lecture.room = room;
+    }
+
+    // 8. Save
     await lecture.save();
 
     return res.status(200).json({
@@ -476,6 +864,9 @@ export const updateLecture = async (req, res) => {
   }
 };
 
+// ==============================
+// DELETE LECTURE
+// ==============================
 export const deleteLecture = async (req, res) => {
   try {
     const { id } = req.params;
