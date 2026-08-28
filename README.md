@@ -20,7 +20,7 @@ The idea is simple: an admin creates courses, adds lectures, and assigns them to
 **Admin**
 ```
 Email: admin@gmail.com
-Password: 123456
+Password: admin123
 ```
 
 **Instructor**
